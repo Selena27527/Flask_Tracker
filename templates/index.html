@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm mb-5 p-4">
+    <h4 class="lavender-text mb-3">Add New Game</h4>
+    <form action="/add" method="POST" class="row g-2">
+        <div class="col-md-4"><input type="text" name="title" class="form-control" placeholder="Title" required></div>
+        <div class="col-md-2">
+            <select name="platform" class="form-select">
+                <option value="PC">PC</option><option value="PS5">PS5</option>
+                <option value="Xbox">Xbox</option><option value="Switch">Switch</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="rating" class="form-select">
+                <option value="5">5 Stars</option><option value="4">4 Stars</option>
+                <option value="3">3 Stars</option><option value="2">2 Stars</option><option value="1">1 Star</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="Playing">Playing</option><option value="Completed">Completed</option>
+                <option value="Backlog">Backlog</option><option value="Dropped">Dropped</option>
+            </select>
+        </div>
+        <div class="col-md-2"><button type="submit" class="btn btn-mint w-100">Add</button></div>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover bg-white rounded shadow-sm">
+        <thead class="table-light"><tr><th>Game</th><th>Platform</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for game in games %}
+            <tr>
+                <td>{{ game.title }}</td>
+                <td><span class="badge bg-secondary">{{ game.platform }}</span></td>
+                <td class="text-warning">{% for i in range(game.rating|int) %}★{% endfor %}</td>
+                <td>
+                    <span class="badge {% if game.status == 'Completed' %}bg-success{% elif game.status == 'Dropped' %}bg-dark{% elif game.status == 'Playing' %}bg-info{% else %}bg-warning text-dark{% endif %}">
+                        {{ game.status }}
+                    </span>
+                </td>
+                <td>
+                    <a href="/edit/{{ game.id }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></a>
+                    <a href="/delete/{{ game.id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
